@@ -1,6 +1,6 @@
 # ZLS-Overlay
 
-This repository packages the precompiled binaries from each github releae of [zls](https://zigtools.org/zls/).     
+This repository packages the precompiled binaries from each github release of [zls](https://zigtools.org/zls/).     
 The binaries can be accessed through `packages.<version>`. e.g. `packages."0.15.0"`.    
 
 ## Usage
