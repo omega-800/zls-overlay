@@ -10,8 +10,8 @@ The binaries can be accessed through `packages.<version>`. e.g. `packages."0.15.
 {
   inputs.zls-overlay.url = "github:omega-800/zls-overlay";
 
-  outputs = { zls, ... }: {
-    devShells
+  outputs = { zls-overlay, ... }: {
+    ...
   };
 }
 ```
