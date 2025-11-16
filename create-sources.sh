@@ -58,7 +58,3 @@ map("\(.tag_name)|\(.assets | map(select(.name | test("^zls-(aarch64-(linux|maco
 
 truncate -s -3 sources.json 
 printf "\n]" >> sources.json
-
-# assets [browser_download_url + name]
-# only aarch64-macos aarch64-linux x86_64-linux
-# select(. | test("^zls-(aarch64-(linux|macos)|x86_64-linux)") and (. | test("minisig$") | not))

@@ -4,7 +4,6 @@
   outputs =
     { nixpkgs, self }:
     let
-      # systems = nixpkgs.lib.platforms.unix;
       systems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -60,54 +59,6 @@
           ) (builtins.filter (v: v.arch == pkgs.system) sources)
         )
       );
-      /*
-        let
-          sources = builtins.fromJSON (nixpkgs.lib.fileContents ./sources.json);
-        in
-        nixpkgs.lib.mapAttrs (
-          system: versions:
-          let
-            pkgs = import nixpkgs {
-              inherit system;
-              config = { };
-              overlays = [ ];
-            };
-            inherit (pkgs.lib)
-              listToAttrs
-              ;
-          in
-          listToAttrs (
-            map (
-              {
-                url,
-                version,
-                sha256,
-              }:
-              {
-                name = version;
-                value = pkgs.stdenv.mkDerivation {
-                  inherit version;
-                  pname = "zls";
-                  src = pkgs.fetchurl {
-                    inherit url sha256;
-                    name = "${version}.tgz";
-                  };
-                  dontConfigure = true;
-                  dontBuild = true;
-                  dontFixup = true;
-                  installPhase = ''
-                    mkdir -p $out/{doc,bin,lib}
-                    [ -d docs ] && cp -r docs/* $out/doc
-                    [ -d doc ] && cp -r doc/* $out/doc
-                    cp -r lib/* $out/lib
-                    cp zls $out/bin/zls
-                  '';
-                };
-              }
-            ) versions
-          )
-        ) (builtins.groupBy (s: s.arch) sources);
-      */
 
       overlays =
         let
