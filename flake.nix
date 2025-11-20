@@ -96,11 +96,21 @@
                     tar -xf $src
                   elif [[ "$src" =~ \.tar\.gz$ ]]; then 
                     tar -xzf $src
+                  else
+                    printf "archive format not supported"
+                    exit 1
                   fi
                 '';
                 installPhase = ''
-                  mkdir -p $out/bin
-                  cp zls $out/bin/zls
+                  mkdir -p "$out/bin"
+                  if [ -e zls ]; then
+                    cp zls "$out/bin"
+                  elif [ -e bin/zls ]; then
+                    cp bin/zls "$out/bin"
+                  else
+                    printf "no binary found"
+                    exit 1
+                  fi
                 '';
               };
             }
