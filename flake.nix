@@ -5,9 +5,19 @@
     { nixpkgs, self }:
     let
       systems = [
-        "x86_64-linux"
-        "aarch64-linux"
         "aarch64-darwin"
+        "x86_64-darwin"
+        "x86_64-linux"
+        "riscv64-linux"
+        "i686-linux"
+        "aarch64-linux"
+        "armv7a-linux"
+        "loongarch64-linux"
+        "powerpc64le-linux"
+        "s390x-linux"
+        "aarch64-windows"
+        "x86_64-windows"
+        "i686-windows"
       ];
       eachSystem =
         f:
@@ -48,7 +58,13 @@
                 dontBuild = true;
                 dontFixup = true;
                 unpackPhase = ''
-                  tar -xf $src
+                  if [[ "$src" =~ \.zip$ ]]; then 
+                    unzip$ "$src"
+                  elif [[ "$src" =~ \.tar\.xz$ ]]; then 
+                    tar -xf $src
+                  elif [[ "$src" =~ \.tar\.gz$ ]]; then 
+                    tar -xzf $src
+                  fi
                 '';
                 installPhase = ''
                   mkdir -p $out/bin
@@ -56,7 +72,7 @@
                 '';
               };
             }
-          ) (builtins.filter (v: v.arch == pkgs.system) sources)
+          ) (builtins.filter (v: v.system == pkgs.system) sources)
         )
       );
 

@@ -41,20 +41,24 @@ while read -r item; do
     arch="${name%%.*}"
     arch="${arch/zls-/}"
     arch="${arch/macos/darwin}"
+    arch="${arch/x64-/i686-}"
     url="${elem%,*}"
     file="$dir/$ver-$name"
     curl -sLo "$file" "$url"
     sha="$(sha256sum "$file" | cut -d' ' -f1)"
-    printf '{"url": "%s", "version": "%s", "sha256": "%s", "arch": "%s" }, \n' "$url" "$ver" "$sha" "$arch" >> sources.json
+    printf '{"url":"%s","version":"%s","sha256":"%s","system":"%s"},\n' "$url" "$ver" "$sha" "$arch" >> sources.json
   done
 done < <(curl -sL \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: Bearer $1" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
   https://api.github.com/repos/zigtools/zls/releases | 
-  jq '
-map("\(.tag_name)|\(.assets | map(select(.name | test("^zls-(aarch64-(linux|macos)|x86_64-linux)") and (. | test("minisig$") | not)) | "\(.browser_download_url),\(.name)") | join(" "))") | .[]
-' -r)
+  jq 'map("\(.tag_name)|\(.assets | map(
+  select(.name | 
+    test("^(zls-)?((((x86_|riscv|(long)?aarch)64)|i686|armv7a|s390x|powerpc64le)-(linux|macos|windows)).*z(ip)?$") and 
+      (. | test("minisig$") | not)) | 
+    "\(.browser_download_url),\(.name)") 
+  | join(" "))") | .[]' -r)
 
-truncate -s -3 sources.json 
+truncate -s -2 sources.json 
 printf "\n]" >> sources.json
