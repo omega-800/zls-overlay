@@ -103,10 +103,9 @@
                 '';
                 installPhase = ''
                   mkdir -p "$out/bin"
-                  if [ -e zls ]; then
-                    cp zls "$out/bin"
-                  elif [ -e bin/zls ]; then
-                    cp bin/zls "$out/bin"
+                  file="$(find . -type f -name zls -exec grep -rIL . "{}" \;)"
+                  if [ -e "$file" ]; then
+                    cp "$file" "$out/bin"
                   else
                     printf "no binary found"
                     exit 1
