@@ -1,2 +1,4 @@
 result
 .direnv
+github-token.txt
+.pre-commit-config.yaml

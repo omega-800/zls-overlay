@@ -1,8 +1,28 @@
 {
   description = "Zls binaries";
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-github-actions = {
+      url = "github:nix-community/nix-github-actions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
   outputs =
-    { nixpkgs, self }:
+    {
+      self,
+      nixpkgs,
+      treefmt-nix,
+      pre-commit-hooks,
+      nix-github-actions,
+    }:
     let
       systems = [
         "aarch64-darwin"
@@ -31,6 +51,18 @@
             }
           )
         );
+      treefmt = eachSystem (
+        pkgs:
+        treefmt-nix.lib.evalModule pkgs (_: {
+          projectRootFile = "flake.nix";
+          programs = {
+            mdformat.enable = true;
+            nixfmt.enable = true;
+            shellcheck.enable = false;
+            shfmt.enable = true;
+          };
+        })
+      );
     in
     {
       packages = eachSystem (
@@ -86,5 +118,57 @@
           inherit zls;
           default = zls;
         };
+
+      devShells = eachSystem (
+        pkgs:
+        let
+          inherit (self.checks.${pkgs.system}) pre-commit-check;
+          zls = pkgs.mkShell {
+            inherit (pre-commit-check) shellHook;
+            buildInputs = pre-commit-check.enabledPackages;
+          };
+        in
+        {
+          inherit zls;
+          default = zls;
+        }
+      );
+
+      apps = eachSystem (
+        pkgs:
+        let
+          update-sources = {
+            type = "app";
+            program = "${pkgs.writeShellScriptBin "update-sources" ''${./create-sources.sh} "$$(cat ${./github-token.txt})" -fo ./sources.json''}";
+          };
+        in
+        {
+          inherit update-sources;
+          default = update-sources;
+        }
+      );
+
+      checks = eachSystem (pkgs: {
+        pre-commit-check = pre-commit-hooks.lib.${pkgs.system}.run {
+          src = ./.;
+          hooks.treefmt = {
+            enable = true;
+            packageOverrides.treefmt = treefmt.${pkgs.system}.config.build.wrapper;
+          };
+        };
+      });
+
+      formatter = eachSystem (pkgs: treefmt.${pkgs.system}.config.build.wrapper);
+
+      githubActions = nix-github-actions.lib.mkGithubMatrix {
+        checks =
+          let
+            onlySupported = nixpkgs.lib.getAttrs [
+              "x86_64-linux"
+              "x86_64-darwin"
+            ];
+          in
+          (onlySupported self.checks) // (onlySupported self.packages);
+      };
     };
 }

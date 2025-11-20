@@ -1,7 +1,7 @@
 # ZLS-Overlay
 
-This repository packages the precompiled binaries from each github release of [zls](https://zigtools.org/zls/).     
-The binaries can be accessed through `packages.<version>`. e.g. `packages."0.15.0"`.    
+This repository packages the precompiled binaries from each github release of [zls](https://zigtools.org/zls/).\
+The binaries can be accessed through `packages.<version>`. e.g. `packages."0.15.0"`.
 
 ## Usage
 
@@ -13,8 +13,8 @@ Include this repo as an input in your `flake.nix`.
 }
 ```
 
-To use a specific version of zls in e.g. your devShell, add one of the following:       
-Using the `packages` output:    
+To use a specific version of zls in e.g. your devShell, add one of the following:\
+Using the `packages` output:
 
 ```nix
 # flake.nix
@@ -37,7 +37,7 @@ Using the `packages` output:
 }
 ```
 
-Or by using the overlay:    
+Or by using the overlay:
 
 ```nix
 # flake.nix
