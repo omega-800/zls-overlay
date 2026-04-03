@@ -10,10 +10,6 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-github-actions = {
-      url = "github:nix-community/nix-github-actions";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs =
     {
@@ -21,7 +17,6 @@
       nixpkgs,
       treefmt-nix,
       pre-commit-hooks,
-      nix-github-actions,
     }:
     let
       systems = [
@@ -113,7 +108,7 @@
                 '';
               };
             }
-          ) (builtins.filter (v: v.system == pkgs.system) sources)
+          ) (builtins.filter (v: v.system == pkgs.stdenv.hostPlatform.system) sources)
         )
       );
 
@@ -131,10 +126,11 @@
       devShells = eachSystem (
         pkgs:
         let
-          inherit (self.checks.${pkgs.system}) pre-commit-check;
-          zls = pkgs.mkShell {
+          inherit (self.checks.${pkgs.stdenv.hostPlatform.system}) pre-commit-check;
+          zls = pkgs.mkShellNoCC {
             inherit (pre-commit-check) shellHook;
             buildInputs = pre-commit-check.enabledPackages;
+            packages = [ pkgs.jq ];
           };
         in
         {
@@ -148,7 +144,13 @@
         let
           update-sources = {
             type = "app";
-            program = "${pkgs.writeShellScriptBin "update-sources" ''${./create-sources.sh} "$$(cat ${./github-token.txt})" -fo ./sources.json''}";
+            program = "${
+              pkgs.writeShellApplication {
+                name = "update-sources";
+                runtimeInputs = [ pkgs.jq ];
+                text = ''${./create-sources.sh} "$(cat ./github-token.txt)" -fo ./sources.json'';
+              }
+            }/bin/update-sources";
           };
         in
         {
@@ -158,26 +160,15 @@
       );
 
       checks = eachSystem (pkgs: {
-        pre-commit-check = pre-commit-hooks.lib.${pkgs.system}.run {
+        pre-commit-check = pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
           src = ./.;
           hooks.treefmt = {
             enable = true;
-            packageOverrides.treefmt = treefmt.${pkgs.system}.config.build.wrapper;
+            packageOverrides.treefmt = treefmt.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper;
           };
         };
       });
 
-      formatter = eachSystem (pkgs: treefmt.${pkgs.system}.config.build.wrapper);
-
-      githubActions = nix-github-actions.lib.mkGithubMatrix {
-        checks =
-          let
-            onlySupported = nixpkgs.lib.getAttrs [
-              "x86_64-linux"
-              "x86_64-darwin"
-            ];
-          in
-          (onlySupported self.checks) // (onlySupported self.packages);
-      };
+      formatter = eachSystem (pkgs: treefmt.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper);
     };
 }

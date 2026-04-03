@@ -1,4 +1,13 @@
 [
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-aarch64-linux.tar.xz","version":"0.15.1","sha256":"a2daa860a0e0cd1410491ff9703c6aaca96defd833b88af6a9811d6ff04fc13b","system":"aarch64-linux"},
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-aarch64-macos.tar.xz","version":"0.15.1","sha256":"a6b3f1b10d77f37f3b9d962093f030334b083f48eb2607a4b3ccb72de2958133","system":"aarch64-darwin"},
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-aarch64-windows.zip","version":"0.15.1","sha256":"46f7c224db4045e5948bbb0608313539343d46466030f8d253488a75b5aabd44","system":"aarch64-windows"},
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-powerpc64le-linux.tar.xz","version":"0.15.1","sha256":"3b1a55f3e811426f0845f9ea3e16246ecc2896f0e602e87b2959166a5e42aa63","system":"powerpc64le-linux"},
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-riscv64-linux.tar.xz","version":"0.15.1","sha256":"6ffd523b08b3b1c18ef061653e29e08e7561633c60dcd41f4af2e9985aa32daf","system":"riscv64-linux"},
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-s390x-linux.tar.xz","version":"0.15.1","sha256":"0e95b1fab355f4931f16ab76a65515bde8f459114bc311cffb7944da8ce91be2","system":"s390x-linux"},
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-x86_64-linux.tar.xz","version":"0.15.1","sha256":"3bb38f522cb23213e8c075ac6b170273fe49b4274b8c12b034cc496407400067","system":"x86_64-linux"},
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-x86_64-macos.tar.xz","version":"0.15.1","sha256":"b76aa724be3f69799f08063f84e93b8b5925f6bf6007f251a2fbea4f9fc244dd","system":"x86_64-darwin"},
+{"url":"https://github.com/zigtools/zls/releases/download/0.15.1/zls-x86_64-windows.zip","version":"0.15.1","sha256":"41b20c8e2952c95385ce316c3e8000178a6deb4857893f2f6d8078b1453c0f54","system":"x86_64-windows"},
 {"url":"https://github.com/zigtools/zls/releases/download/0.15.0/zls-aarch64-linux.tar.xz","version":"0.15.0","sha256":"2d1c91382dbbd7a34c3bd87da506e3c2ce6e6582612c2b371f7f97b46c5557d4","system":"aarch64-linux"},
 {"url":"https://github.com/zigtools/zls/releases/download/0.15.0/zls-aarch64-macos.tar.xz","version":"0.15.0","sha256":"76c7a23190f67e67970024065f689c2c49b3c7b0fc16876fb24ef199fb05fc2a","system":"aarch64-darwin"},
 {"url":"https://github.com/zigtools/zls/releases/download/0.15.0/zls-aarch64-windows.zip","version":"0.15.0","sha256":"5765e0fe96674577d4104e1e832205622390b8c1753305be78b9966f8d2d8468","system":"aarch64-windows"},
